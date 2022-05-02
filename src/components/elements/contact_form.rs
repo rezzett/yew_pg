@@ -1,4 +1,4 @@
-use gloo::console::{externs::log, log};
+use gloo::console::log;
 use wasm_bindgen::JsCast;
 use web_sys::{Event, HtmlInputElement, MouseEvent};
 use yew::{html, Callback, Component};

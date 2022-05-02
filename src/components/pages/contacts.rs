@@ -24,7 +24,7 @@ impl Component for Contacts {
         html! {
             <>
                 <h4>{"Contacts"}</h4>
-                <WithDispatch<Adder> />
+                <Adder />
                 <WithDispatch<ContactForm> />
             </>
         }

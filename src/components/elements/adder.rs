@@ -1,44 +1,27 @@
-use gloo::console::log;
 use yew::prelude::*;
-use yewdux::prelude::{BasicStore, DispatchProps, Dispatcher, WithDispatchProps};
+use yewdux::prelude::{BasicStore, Dispatcher};
+use yewdux_functional::use_store;
 
 use crate::store::YewduxStore;
 
-pub struct Adder {
-    _dispatch: DispatchProps<BasicStore<YewduxStore>>, // store it fo force rerender when state updates
-}
+#[function_component(Adder)]
+pub fn adder() -> Html {
+    let store = use_store::<BasicStore<YewduxStore>>();
+    let add_handler = store
+        .dispatch()
+        .reduce_callback(|state| state.adder_val += 1);
 
-impl Component for Adder {
-    type Message = ();
+    let sub_handler = store
+        .dispatch()
+        .reduce_callback(|state| state.adder_val -= 1);
 
-    type Properties = DispatchProps<BasicStore<YewduxStore>>;
+    let adder_val = store.state().map(|s| s.adder_val).unwrap_or_default();
 
-    fn create(ctx: &Context<Self>) -> Self {
-        Self {
-            _dispatch: ctx.props().dispatch().clone(),
-        }
-    }
-
-    fn view(&self, ctx: &Context<Self>) -> Html {
-        log!("render"); // TODO form and counter rerender together when one of those changed
-        let adder_val = ctx.props().state().adder_val; // struct YeduxStore under Rc
-
-        let add_handler = ctx
-            .props()
-            .dispatch()
-            .reduce_callback(|state| state.adder_val += 1);
-
-        let sub_handler = ctx
-            .props()
-            .dispatch()
-            .reduce_callback(|state| state.adder_val -= 1);
-
-        html! {
-            <>
-                <p>{adder_val}</p>
-                <button onclick={add_handler}>{"+"}</button>
-                <button onclick={sub_handler}>{"-"}</button>
-            </>
-        }
+    html! {
+        <>
+            <p>{adder_val}</p>
+            <button onclick={add_handler}>{"+"}</button>
+            <button onclick={sub_handler}>{"-"}</button>
+        </>
     }
 }
